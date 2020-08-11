@@ -60,5 +60,8 @@ spec:
         value: reserved
       - effect: NoExecute
         key: infra
-        value: reserved  
+        value: reserved
+      - effect: NoSchedule
+        key: master
+        operator: Exists  
       fluentd: {}
