@@ -1,0 +1,63 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  labels:
+    machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7 
+  name: ocp4c-8m8b7-storage-us-east-1a
+  namespace: openshift-machine-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7 
+      machine.openshift.io/cluster-api-machineset: ocp4c-8m8b7-storage-us-east-1a 
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7 
+        machine.openshift.io/cluster-api-machine-role: storage
+        machine.openshift.io/cluster-api-machine-type: worker 
+        machine.openshift.io/cluster-api-machineset: ocp4c-8m8b7-storage-us-east-1a
+    spec:
+      metadata:
+        labels:
+          node-role.kubernetes.io/storage: ""
+      taints:
+      - effect: NoSchedule
+        key: ocs.openshift.io/storage
+        value: true 
+      providerSpec:
+        value:
+          ami:
+            id: ami-046fe691f52a953f9 
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+            - ebs:
+                iops: 0
+                volumeSize: 700
+                volumeType: gp2
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: ocp4c-8m8b7-worker-profile 
+          instanceType: m4.4xlarge
+          kind: AWSMachineProviderConfig
+          placement:
+            availabilityZone: us-east-1a
+            region: us-east-1
+          securityGroups:
+            - filters:
+                - name: tag:Name
+                  values:
+                    - ocp4c-8m8b7-worker-sg 
+          subnet:
+            filters:
+              - name: tag:Name
+                values:
+                  - ocp4c-8m8b7-private-us-east-1a
+          tags:
+            - name: kubernetes.io/cluster/ocp4c-8m8b7 
+              value: owned
+          userDataSecret:
+            name: worker-user-data
