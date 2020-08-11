@@ -11,6 +11,9 @@ spec:
       nodeCount: 3
       nodeSelector:
         node-role.kubernetes.io/infra: ''
+      resources:
+        request:
+          memory: 4G
       tolerations:
       - effect: NoSchedule
         key: infra
@@ -20,7 +23,7 @@ spec:
         value: reserved
       storage:
         storageClassName: "gp2" 
-        size: 200G
+        size: 100G
       redundancyPolicy: "SingleRedundancy"
   visualization:
     type: "kibana"  
