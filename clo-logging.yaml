@@ -12,7 +12,7 @@ spec:
       nodeSelector:
         node-role.kubernetes.io/infra: ''
       storage:
-        storageClassName: "<storage-class-name>" 
+        storageClassName: "gp2" 
         size: 200G
       redundancyPolicy: "SingleRedundancy"
   visualization:
