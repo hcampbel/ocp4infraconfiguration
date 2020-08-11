@@ -11,6 +11,13 @@ spec:
       nodeCount: 3
       nodeSelector:
         node-role.kubernetes.io/infra: ''
+      tolerations:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved
       storage:
         storageClassName: "gp2" 
         size: 200G
@@ -20,12 +27,26 @@ spec:
     kibana:
       nodeSelector:
         node-role.kubernetes.io/infra: ''
+      tolerations:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved
       replicas: 1
   curation:
     type: "curator"  
     curator:
       nodeSelector:
         node-role.kubernetes.io/infra: ''
+      tolerations:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved
       schedule: "30 3 * * *"
   collection:
     logs:
