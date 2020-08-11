@@ -34,7 +34,7 @@ spec:
           blockDevices:
             - ebs:
                 iops: 0
-                volumeSize: 700
+                volumeSize: 2000
                 volumeType: gp2
           credentialsSecret:
             name: aws-cloud-credentials
