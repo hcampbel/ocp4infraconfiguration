@@ -2,25 +2,25 @@ piVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
   labels:
-    machine.openshift.io/cluster-api-cluster: CLUSTERID
+    machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
     machine.openshift.io/cluster-api-machine-role: workerocs
     machine.openshift.io/cluster-api-machine-type: workerocs
-  name: CLUSTERID-workerocs-us-east-1a
+  name: ocp4c-8m8b7-workerocs-us-east-1a
   namespace: openshift-machine-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: CLUSTERID
-      machine.openshift.io/cluster-api-machineset: CLUSTERID-workerocs-us-east-1a
+      machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
+      machine.openshift.io/cluster-api-machineset: ocp4c-8m8b7-workerocs-us-east-1a
   template:
     metadata:
       creationTimestamp: null
       labels:
-        machine.openshift.io/cluster-api-cluster: CLUSTERID
+        machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
         machine.openshift.io/cluster-api-machine-role: workerocs
         machine.openshift.io/cluster-api-machine-type: workerocs
-        machine.openshift.io/cluster-api-machineset: CLUSTERID-workerocs-us-east-1a
+        machine.openshift.io/cluster-api-machineset: ocp4c-8m8b7-workerocs-us-east-1a
     spec:
       metadata:
         creationTimestamp: null
@@ -36,14 +36,14 @@ spec:
           blockDevices:
           - ebs:
               iops: 0
-              volumeSize: 120
+              volumeSize: 2000
               volumeType: gp2
           credentialsSecret:
             name: aws-cloud-credentials
           deviceIndex: 0
           iamInstanceProfile:
-            id: CLUSTERID-worker-profile
-          instanceType: m5.4xlarge
+            id: ocp4c-8m8b7-worker-profile
+          instanceType: m4.4xlarge
           kind: AWSMachineProviderConfig
           metadata:
             creationTimestamp: null
@@ -55,14 +55,14 @@ spec:
           - filters:
             - name: tag:Name
               values:
-              - CLUSTERID-worker-sg
+              - ocp4c-8m8b7-worker-sg
           subnet:
             filters:
             - name: tag:Name
               values:
-              - CLUSTERID-private-us-east-1a
+              - ocp4c-8m8b7-private-us-east-1a
           tags:
-          - name: kubernetes.io/cluster/CLUSTERID
+          - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
           userDataSecret:
             name: worker-user-data
@@ -73,25 +73,25 @@ apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
   labels:
-    machine.openshift.io/cluster-api-cluster: CLUSTERID
+    machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
     machine.openshift.io/cluster-api-machine-role: workerocs
     machine.openshift.io/cluster-api-machine-type: workerocs
-  name: CLUSTERID-workerocs-us-east-1b
+  name: ocp4c-8m8b7-workerocs-us-east-1e
   namespace: openshift-machine-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: CLUSTERID
-      machine.openshift.io/cluster-api-machineset: CLUSTERID-workerocs-us-east-1b
+      machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
+      machine.openshift.io/cluster-api-machineset: ocp4c-8m8b7-workerocs-us-east-1e
   template:
     metadata:
       creationTimestamp: null
       labels:
-        machine.openshift.io/cluster-api-cluster: CLUSTERID
+        machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
         machine.openshift.io/cluster-api-machine-role: workerocs
         machine.openshift.io/cluster-api-machine-type: workerocs
-        machine.openshift.io/cluster-api-machineset: CLUSTERID-workerocs-us-east-1b
+        machine.openshift.io/cluster-api-machineset: ocp4c-8m8b7-workerocs-us-east-1e
     spec:
       metadata:
         creationTimestamp: null
@@ -107,33 +107,33 @@ spec:
           blockDevices:
           - ebs:
               iops: 0
-              volumeSize: 120
+              volumeSize: 2000
               volumeType: gp2
           credentialsSecret:
             name: aws-cloud-credentials
           deviceIndex: 0
           iamInstanceProfile:
-            id: CLUSTERID-worker-profile
-          instanceType: m5.4xlarge
+            id: ocp4c-8m8b7-worker-profile
+          instanceType: m4.4xlarge
           kind: AWSMachineProviderConfig
           metadata:
             creationTimestamp: null
           placement:
-            availabilityZone: us-east-1b
+            availabilityZone: us-east-1e
             region: us-east-1
           publicIp: null
           securityGroups:
           - filters:
             - name: tag:Name
               values:
-              - CLUSTERID-worker-sg
+              - ocp4c-8m8b7-worker-sg
           subnet:
             filters:
             - name: tag:Name
               values:
-              - CLUSTERID-private-us-east-1b
+              - ocp4c-8m8b7-private-us-east-1e
           tags:
-          - name: kubernetes.io/cluster/CLUSTERID
+          - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
           userDataSecret:
             name: worker-user-data
@@ -144,25 +144,25 @@ apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
   labels:
-    machine.openshift.io/cluster-api-cluster: CLUSTERID
+    machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
     machine.openshift.io/cluster-api-machine-role: workerocs
     machine.openshift.io/cluster-api-machine-type: workerocs
-  name: CLUSTERID-workerocs-us-east-1c
+  name: ocp4c-8m8b7-workerocs-us-east-1c
   namespace: openshift-machine-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      machine.openshift.io/cluster-api-cluster: CLUSTERID
-      machine.openshift.io/cluster-api-machineset: CLUSTERID-workerocs-us-east-1c
+      machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
+      machine.openshift.io/cluster-api-machineset: ocp4c-8m8b7-workerocs-us-east-1c
   template:
     metadata:
       creationTimestamp: null
       labels:
-        machine.openshift.io/cluster-api-cluster: CLUSTERID
+        machine.openshift.io/cluster-api-cluster: ocp4c-8m8b7
         machine.openshift.io/cluster-api-machine-role: workerocs
         machine.openshift.io/cluster-api-machine-type: workerocs
-        machine.openshift.io/cluster-api-machineset: CLUSTERID-workerocs-us-east-1c
+        machine.openshift.io/cluster-api-machineset: ocp4c-8m8b7-workerocs-us-east-1c
     spec:
       metadata:
         creationTimestamp: null
@@ -178,14 +178,14 @@ spec:
           blockDevices:
           - ebs:
               iops: 0
-              volumeSize: 120
+              volumeSize: 2000
               volumeType: gp2
           credentialsSecret:
             name: aws-cloud-credentials
           deviceIndex: 0
           iamInstanceProfile:
-            id: CLUSTERID-worker-profile
-          instanceType: m5.4xlarge
+            id: ocp4c-8m8b7-worker-profile
+          instanceType: m4.4xlarge
           kind: AWSMachineProviderConfig
           metadata:
             creationTimestamp: null
@@ -197,14 +197,14 @@ spec:
           - filters:
             - name: tag:Name
               values:
-              - CLUSTERID-worker-sg
+              - ocp4c-8m8b7-worker-sg
           subnet:
             filters:
             - name: tag:Name
               values:
-              - CLUSTERID-private-us-east-1c
+              - ocp4c-8m8b7-private-us-east-1c
           tags:
-          - name: kubernetes.io/cluster/CLUSTERID
+          - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
           userDataSecret:
             name: worker-user-data
