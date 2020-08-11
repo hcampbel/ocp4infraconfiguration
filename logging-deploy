@@ -1,0 +1,15 @@
+oc create -f eo-namespace.yaml && oc create -f clo-namespace.yaml && oc create -f eo-og.yaml && oc create -f eo-sub.yaml
+
+# Verify ElasticSearch Operator Install
+oc get csv --all-namespaces
+
+
+oc create -f clo-og.yaml && oc create -f clo-sub.yaml
+
+# Verify Cluster Logging Operator Install
+oc get csv -n openshift-logging
+
+oc create -f clo-instance.yaml
+
+#Verify
+oc get pods -n openshift-logging
