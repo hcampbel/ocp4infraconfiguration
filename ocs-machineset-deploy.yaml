@@ -1,4 +1,4 @@
-piVersion: machine.openshift.io/v1beta1
+apiVersion: machine.openshift.io/v1beta1
 kind: MachineSet
 metadata:
   labels:
