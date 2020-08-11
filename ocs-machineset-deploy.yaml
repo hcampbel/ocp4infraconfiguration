@@ -60,7 +60,7 @@ spec:
             filters:
             - name: tag:Name
               values:
-              - ocp4c-8m8b7-private-us-east-1a
+              - subnet-0326915d699f2be74
           tags:
           - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
@@ -131,7 +131,7 @@ spec:
             filters:
             - name: tag:Name
               values:
-              - ocp4c-8m8b7-private-us-east-1e
+              - subnet-0c489a2536b4aa4ec
           tags:
           - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
@@ -202,7 +202,7 @@ spec:
             filters:
             - name: tag:Name
               values:
-              - ocp4c-8m8b7-private-us-east-1c
+              - subnet-02b6bab5a7f49c217
           tags:
           - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
