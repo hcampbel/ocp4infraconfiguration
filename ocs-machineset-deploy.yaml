@@ -60,7 +60,7 @@ spec:
             filters:
             - name: tag:Name
               values:
-              - subnet-0326915d699f2be74
+              - ita-lab-priv-1
           tags:
           - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
@@ -131,7 +131,7 @@ spec:
             filters:
             - name: tag:Name
               values:
-              - subnet-0c489a2536b4aa4ec
+              - ita-lab-priv-3
           tags:
           - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
@@ -202,7 +202,7 @@ spec:
             filters:
             - name: tag:Name
               values:
-              - subnet-02b6bab5a7f49c217
+              - ita-lab-priv-2
           tags:
           - name: kubernetes.io/cluster/ocp4c-8m8b7
             value: owned
