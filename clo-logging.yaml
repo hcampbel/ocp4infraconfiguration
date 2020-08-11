@@ -53,5 +53,12 @@ spec:
       schedule: "30 3 * * *"
   collection:
     logs:
-      type: "fluentd"  
+      type: "fluentd"
+      tolerations:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved  
       fluentd: {}
