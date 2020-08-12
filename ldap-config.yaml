@@ -5,7 +5,6 @@ data:
    apiVersion: v1
    url: <ldap-url>
    insecure: True
-   #ca: /etc/origin/master/vrtx_ldaps_ldap_ca.crt
    groupUIDNameMapping:
      "CN=osedev_admin,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": cluster-admins
      "CN=OSEDevSharedSvcsDeveloper,OU=OSEDev,OU=OpenShift,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": sharedsvcs-developer
