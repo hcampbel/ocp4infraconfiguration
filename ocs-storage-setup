@@ -1,0 +1,12 @@
+# Add infra labels to storage nodes
+oc label node <node-name> node-role.kubernetes.io/infra=
+
+# Remove worker label from storage nodes
+oc label node <node-name> node-role.kubernetes.io/worker-
+
+# Add taint to node
+oc adm taint nodes -l cluster.ocs.openshift.io/openshift-storage node.ocs.openshift.io/storage=true:NoSchedule
+
+
+# Create openshift-storage namespace and label for cluster monitoring
+oc create namespace openshift-storage && oc label namespace openshift-storage "openshift.io/cluster-monitoring=true"
