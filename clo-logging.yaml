@@ -22,8 +22,8 @@ spec:
         key: infra
         value: reserved
       storage:
-        storageClassName: "gp2" 
-        size: 100G
+        storageClassName: "ocs-storagecluster-ceph-rbd" 
+        size: 200G
       redundancyPolicy: "SingleRedundancy"
   visualization:
     type: "kibana"  
