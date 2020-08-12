@@ -4,7 +4,7 @@ metadata:
   name: "instance" 
   namespace: "openshift-logging"
 spec:
-  managementState: "Managed"  
+  # managementState: "Managed"  
   logStore:
     type: "elasticsearch"  
     elasticsearch:
