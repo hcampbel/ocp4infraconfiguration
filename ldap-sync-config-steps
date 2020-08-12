@@ -1,0 +1,103 @@
+# The group synchronization command can be run on a cron job to sync groups every hour like so
+0 * * * * oc adm groups sync --sync-config /etc/origin/master/ldapsync.yml --whitelist /etc/origin/master/whitelist.txt --confirm
+
+A ClusterRoleBinding can then be used to tie the group from ldap to permissions in the cluster. For cluster-admins the cluster-admins ClusterRoleBinding can be modified to give the LDAP group superuser permissions in the cluster.  Note that even though a user in the cluster-admins group will be unable to create until that user has the admin=true label. This process was put into an OCP CronJob executed hourly:
+
+---
+kind: ClusterRole
+apiVersion: v1
+metadata:
+ name: ldap-group-sync
+ labels:
+   template: "cronjob-ldap-group-sync"
+rules:
+ - apiGroups:
+   - ""
+   - "user.openshift.io"
+   resources:
+   - groups
+   verbs:
+   - get
+   - list
+   - create
+   - update
+---
+kind: ClusterRoleBinding
+apiVersion: v1
+groupNames: null
+metadata:
+ name: system:ldap-sync
+roleRef:
+ name: ldap-group-sync
+subjects:
+- kind: ServiceAccount
+ name: ldap-sync-sa
+userNames:
+- system:serviceaccount:<placeholder>-infra:ldap-sync-sa
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+ name: cronjob-ldapsync
+spec:
+ schedule: "@hourly"
+ concurrencyPolicy: "Forbid"
+ successfulJobsHistoryLimit: 5
+ failedJobsHistoryLimit: 5
+ jobTemplate:
+   spec:
+     template:
+       metadata: {}
+       spec:
+         containers:
+         - name: ldap-sync
+           image: openshift3/jenkins-slave-base-rhel7
+           command:
+           - "/bin/bash"
+           - "-c"
+           - "oc adm groups sync --sync-config=/etc/config/ldap-sync.yml --whitelist=/etc/config/whitelist.txt --confirm"
+           volumeMounts:
+           - mountPath: "/etc/config"
+             name: "ldap-sync-volume"
+         volumes:
+         - configMap:
+             items:
+             - key: ldap-sync.yml
+               path: ldap-sync.yml
+             - key: whitelist.txt
+               path: whitelist.txt
+             name: ldap-config
+           name: "ldap-sync-volume"
+         restartPolicy: Never
+         serviceAccountName: ldap-sync-sa
+         serviceAccount: ldap-sync-sa
+
+---
+
+# Create a new project
+oc new-project sharedsvcs --display-name=”Shared Services”
+
+# Add group to LDAP sync config and whitelist:
+
+oc get configmap -n <placeholder>-infra ldap-config > ldapconfigmap.yml
+
+# add ad group under whitelist.txt
+CN=SharedServicesAdmin,OU=OSEDev,OU=Openshift,OU=Application Groups,OU=<placeholder>s,DC=bos1,DC=<placeholder>,DC=com
+CN=SharedServicesDeveloper,OU=OSEDev,OU=Openshift,OU=Application Groups,OU=<placeholder>s,DC=bos1,DC=<placeholder>,DC=com
+CN=SharedServicesView,OU=OSEDev,OU=Openshift,OU=Application Groups,OU=<placeholder>s,DC=bos1,DC=<placeholder>,DC=com
+
+# add group uid mapping to map ad group to sharedsvcs-* (NOTE: you can conigure to set up based on your AD/LDAP for syncing to groups)
+
+“CN= OU=OSEDev,OU=Openshift,OU=Application Groups,OU=<placeholder>s,DC=bos1,DC=<placeholder>,DC=com”:
+sharedsvcs-admin
+“CN= OU=OSEDev,OU=Openshift,OU=Application Groups,OU=<placeholder>s,DC=bos1,DC=<placeholder>,DC=com”:
+sharedsvcs-developer
+“CN= OU=OSEDev,OU=Openshift,OU=Application Groups,OU=<placeholder>s,DC=bos1,DC=<placeholder>,DC=com”: sharedsvcs-view
+
+oc apply -f ldapconfigmap.yml -n <placeholder>-infra
+
+# Add role to group for project:
+
+oc adm policy add-role-to-group admin sharedsvcs-admin -n sharedsvcs
+oc adm policy add-role-to-group developer sharedsvcs-developer -n sharedsvcs
+oc adm policy add-role-to-group view sharedsvcs-view -n sharedsvcs
