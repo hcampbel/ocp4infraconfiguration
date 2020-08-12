@@ -54,14 +54,14 @@ spec:
   collection:
     logs:
       type: "fluentd"
-      tolerations:
-      - effect: NoSchedule
-        key: infra
-        value: reserved
-      - effect: NoExecute
-        key: infra
-        value: reserved
-      - effect: NoSchedule
-        key: master
-        operator: Exists  
-      fluentd: {}
+      fluentd:
+        tolerations:
+        - effect: NoSchedule
+          key: infra
+          value: reserved
+        - effect: NoExecute
+          key: infra
+          value: reserved
+        - operator: Exists
+        - effect: NoSchedule
+          key: master
