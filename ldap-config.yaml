@@ -1,0 +1,39 @@
+apiVersion: v1
+data:
+ ldap-sync.yml: |
+   kind: LDAPSyncConfig
+   apiVersion: v1
+   url: <ldap-url>
+   insecure: True
+   #ca: /etc/origin/master/vrtx_ldaps_ldap_ca.crt
+   groupUIDNameMapping:
+     "CN=osedev_admin,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": cluster-admins
+     "CN=OSEDevSharedSvcsDeveloper,OU=OSEDev,OU=OpenShift,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": sharedsvcs-developer
+     "CN=OSEDevSharedSvcsAdmin,OU=OSEDev,OU=OpenShift,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": sharedsvcs-admin
+     "CN=OSEDevSharedSvcsView,OU=OSEDev,OU=OpenShift,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": sharedsvcs-view
+     "CN=OSEDevInfraAdmin,OU=OSEDev,OU=OpenShift,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": infra-admin
+     "CN=OSEDevInfraDeveloper,OU=OSEDev,OU=OpenShift,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": infra-developer
+     "CN=OSEDevInfraView,OU=OSEDev,OU=OpenShift,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com": infra-view
+   bindDN: cn=osedevsvc,ou=serviceaccounts,ou=<placeholder>,dc=<placeholder>,dc=<placeholder>,dc=com
+   bindPassword:
+   activeDirectory:
+       groupsQuery:
+           baseDN: "OU=OSEDev,OU=OpenShift,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com"
+           scope: sub
+           derefAliases: never
+           filter: (objectClass=group)
+           pageSize: 0
+       usersQuery:
+           baseDN: "dc=<placeholder>,dc=<placeholder>,dc=com"
+           scope: sub
+           derefAliases: never
+           filter: (objectClass=person)
+           pageSize: 0
+       userNameAttributes: [ sAMAccountName ]
+       groupMembershipAttributes: [ memberOf ]
+ whitelist.txt: |
+   CN=osedev_admin,OU=Application Groups,DC=<placeholder>,DC=<placeholder>,DC=<placeholder>,DC=com
+kind: ConfigMap
+metadata:
+ name: ldap-config
+ namespace: <placeholder>-infra
