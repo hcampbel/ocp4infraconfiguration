@@ -29,7 +29,7 @@ data:
       retention: 15d
       volumeClaimTemplate:
         metadata:
-          name: prometheusK8sceph 
+          name: prometheusvol
         spec: 
           storageClassName: "ocs-storagecluster-ceph-rbd" 
           resources: 
