@@ -8,12 +8,16 @@ data:
     - effect: NoSchedule
       key: node.ocs.openshift.io/storage
       operator: Exists
+    - effect: NoSchedule
+      key: infra
+      operator: Equal
+      value: reserved
+    - effect: NoExecute
+      key: infra
+      operator: Equal
+      value: reserved
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2020-03-23T11:49:27Z"
   name: rook-ceph-operator-config
   namespace: openshift-storage
-  resourceVersion: "114879"
-  selfLink: 
-/api/v1/namespaces/openshift-storage/configmaps/rook-ceph-operator-config
-  uid: ac22e63a-8df1-4650-a57f-89bf7a2ce06a
+  selfLink: /api/v1/namespaces/openshift-storage/configmaps/rook-ceph-operator-config
