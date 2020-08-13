@@ -8,6 +8,14 @@ data:
     alertmanagerMain:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
+      volumeClaimTemplate:
+        metadata:
+          name: alertmanager-ceph-volume 
+        spec: 
+          storageClassName: "ocs-storagecluster-ceph-rbd" 
+          resources: 
+            requests: 
+              storage: 20Gi
       tolerations:
       - key: infra
         value: reserved
@@ -18,6 +26,15 @@ data:
     prometheusK8s:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
+      retention: 15d
+      volumeClaimTemplate:
+        metadata:
+          name: prometheusK8s-ceph-volume 
+        spec: 
+          storageClassName: "ocs-storagecluster-ceph-rbd" 
+          resources: 
+            requests: 
+              storage: 200Gi
       tolerations:
       - key: infra
         value: reserved
