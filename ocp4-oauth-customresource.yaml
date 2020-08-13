@@ -16,6 +16,7 @@ spec:
         - sAMAccountName
         preferredUsername:
         - sAMAccountName
+      # Optional DN to use to bind during the search phase. Must be set if bindPassword is defined.
       bindDN: "" 
       bindPassword: 
         name: ldap-secret
