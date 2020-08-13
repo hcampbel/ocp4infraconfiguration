@@ -9,7 +9,7 @@ oc create -f clo-og.yaml && oc create -f clo-sub.yaml
 # Verify Cluster Logging Operator Install
 oc get csv -n openshift-logging
 
-oc create -f clo-instance.yaml
+oc create -f clo-logging.yaml
 
 #Verify
 oc get pods -n openshift-logging
