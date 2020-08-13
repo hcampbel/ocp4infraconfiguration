@@ -19,7 +19,8 @@ spec:
       bindDN: "" 
       bindPassword: 
         name: ldap-secret
-      ca: 
-        name: ca-config-map
+      # Add ca config map for certs: oc create configmap ca-config-map --from-file=ca.crt=/path/to/ca -n openshift-config
+      # ca: 
+      #  name: ca-config-map
       insecure: false 
-      url: "ldap://ldap.example.com/ou=users,dc=acme,dc=com?uid" 
+      url: "ldap://<ldap-server-url>/ou=users,dc=acme,dc=com?uid" 
