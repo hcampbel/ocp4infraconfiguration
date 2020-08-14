@@ -1,0 +1,10 @@
+oc edit configs.imageregistry.operator.openshift.io -n openshift-image-registry
+
+# Find the storage: stanza and remove it and everything below it. Everything above it should remain in place. Then put the following instead:Under spec the following was added
+storage:
+  pvc:
+    claim: ocs4registry
+<Aslo change the replicas from 1 to 3>
+replicas: 3
+<Make sure this is set to managed>
+managementState: Managed
