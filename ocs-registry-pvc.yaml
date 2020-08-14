@@ -1,11 +1,11 @@
 apiVersion: "v1"
 kind: "PersistentVolumeClaim"
 metadata:
-  name: "registry-pvc"
+  name: "ocs4registry"
 spec:
-  storageClassName: "ocs-storagecluster-ceph-rbd"
+  storageClassName: "ocs-storagecluster-cephfs"
   accessModes:
     - "ReadWriteMany"
   resources:
     requests:
-      storage: "300Gi"
+      storage: "100Gi"
