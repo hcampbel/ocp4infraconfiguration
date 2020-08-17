@@ -1,0 +1,11 @@
+In the OpenShift Container Platform web console, click Operators → OperatorHub.
+Use the Filter by keyword field (in this case, Migration) to find the Cluster Application Migration Operator.
+Select the Cluster Application Migration Operator and click Install.
+On the Create Operator Subscription page, click Subscribe.
+
+On the Installed Operators page, the Cluster Application Migration Operator appears in the openshift-migration project with the status Succeeded.
+
+Click Cluster Application Migration Operator.
+Under Provided APIs, locate the Migration Controller tile, and click Create Instance.
+Click Create.
+Click Workloads → Pods to verify that the Controller Manager, Migration UI, Restic, and Velero Pods are running.
