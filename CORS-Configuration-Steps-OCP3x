@@ -1,0 +1,26 @@
+In order to enable the UI to talk to an OpenShift 3 cluster (whether local or remote) it is necessary to edit the master-config.yaml and restart the OpenShift master nodes.
+
+To determine the CORS URL that needs to be added retrieve the route URL after installing the controller.
+
+$ oc get -n openshift-migration route/migration -o go-template='{{ .spec.host }}{{ println }}'
+
+
+SSH into the OpenShift master nodes, noting the hostname from above
+
+Add the hostname to `/etc/origin/master/master-config.yaml` under corsAllowedOrigins:
+
+corsAllowedOrigins:
+- //$output-from-previous-command
+
+After making these changes on 3.x you'll need to restart OpenShift components to pick up the changed config values. The process for restarting 3.x control plane components differs based on the OpenShift version - https://docs.openshift.com/container-platform/3.10/architecture/infrastructure_components/kubernetes_infrastructure.html#control-plane-static-pods.
+
+In OpenShift 3.7 - 3.9, the control plane runs within systemd services
+
+$ systemctl restart atomic-openshift-master-api
+$ systemctl restart atomic-openshift-master-controllers
+
+
+In OpenShift 3.10i - 3.11, the control plane runs in 'Static Pods'
+
+$ /usr/local/bin/master-restart api
+$ /usr/local/bin/master-restart controller
