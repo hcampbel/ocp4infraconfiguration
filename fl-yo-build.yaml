@@ -1,0 +1,35 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: <app-name>
+  namespace: <app-namespace> 
+spec:
+  strategy:
+    type: Custom
+    customStrategy:
+      pullSecret:
+        name: <inexus-registry-pull-secret>
+      forcePull: true
+      env:
+        - name: SOURCE_REPOSITORY
+          value: <source-repository>
+        - name: DOCKERFILE
+          value: Dockerfile
+      exposeDockerSocket: true
+      from:
+        kind: DockerImage
+        name: <image-name>
+      secrets:
+      - secretSource:
+          name: <jenkins-secret>
+        mountPath:
+  output:
+    pushSecret:
+      name: <nexus-registry-push-secret>
+    to:
+      kind: DockerImage
+      name: <docker-image-name-tag>
+  triggers:
+    - type: ImageChange
+      imageChange: {}
+    - type: ConfigChange
