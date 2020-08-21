@@ -1,0 +1,352 @@
+Verifying Red Hat container image signatures in OpenShift Container Platform 4
+
+Red Hat delivers signatures for the images in the Red Hat Container Registries. Those signatures can be automatically verified when being pulled to OpenShift Container Platform (OCP) 4 clusters using Machine Config.
+
+Most of the images that make OCP 4 are shipped from quay.io, and only the release image is signed. The release images refers to the rest of the OCP 4 images by digest making supply chain attacks harder to pull off. However some extensions to OCP 4 such as Logging, Monitoring, and Service Mesh are shipped as operators from the Operator Lifecycle Manager. Those images ship from the Red Hat Container Registry (registry.redhat.io). In order to verify the integrity of those images between Red Hat registries and your infrastructure it's a good idea to enable signature verification by following the instructions that follow.
+
+Here are the commands to enable signature verification on OCP 4:
+
+1) Create the files which link the registry URLs to the sigstore, and specifies the key to verify the images with:
+
+# cat > policy.json <<EOF
+{
+  "default": [
+    {
+      "type": "insecureAcceptAnything"
+    }
+  ],
+  "transports": {
+    "docker": {
+      "registry.access.redhat.com": [
+        {
+          "type": "signedBy",
+          "keyType": "GPGKeys",
+          "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+        }
+      ],
+      "registry.redhat.io": [
+        {
+          "type": "signedBy",
+          "keyType": "GPGKeys",
+          "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+        }
+      ]
+    },
+    "docker-daemon": {
+      "": [
+        {
+          "type": "insecureAcceptAnything"
+        }
+      ]
+    }
+  }
+}
+EOF
+
+# cat <<EOF > registry.access.redhat.com.yaml
+docker:
+     registry.access.redhat.com:
+         sigstore: https://access.redhat.com/webassets/docker/content/sigstore
+EOF
+
+# cat <<EOF > registry.redhat.io.yaml
+docker:
+     registry.redhat.io:
+         sigstore: https://registry.redhat.io/containers/sigstore
+EOF
+
+2) Base64 encode those files ready to be feed into the machine config template
+
+# export ARC_REG=$( cat registry.access.redhat.com.yaml | base64 -w0 )
+# export RIO_REG=$( cat registry.redhat.io.yaml | base64 -w0 )
+# export POLICY_CONFIG=$( cat policy.json | base64 -w0 )
+
+3) Create a machine config which writes those files to disk on the worker nodes:
+
+cat > 51-worker-rh-registry-trust.yaml <<EOF
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: worker
+  name: 51-worker-rh-registry-trust
+spec:
+  config:
+    ignition:
+      config: {}
+      security:
+        tls: {}
+      timeouts: {}
+      version: 2.2.0
+    networkd: {}
+    passwd: {}
+    storage:
+      files:
+      - contents:
+          source: data:text/plain;charset=utf-8;base64,${ARC_REG}
+          verification: {}
+        filesystem: root
+        mode: 420
+        path: /etc/containers/registries.d/registry.access.redhat.com.yaml
+      - contents:
+          source: data:text/plain;charset=utf-8;base64,${RIO_REG}
+          verification: {}
+        filesystem: root
+        mode: 420
+        path: /etc/containers/registries.d/registry.redhat.io.yaml
+      - contents:
+          source: data:text/plain;charset=utf-8;base64,${POLICY_CONFIG}
+          verification: {}
+        filesystem: root
+        mode: 420
+        path: /etc/containers/policy.json
+  osImageURL: ""
+EOF
+
+5) Apply the worker Machine Config changes to the cluster:
+
+oc apply -f 51-worker-rh-registry-trust.yaml
+
+
+NOTE: Usually the master nodes won't be running Operators or other workload pods from the OLM, but it doesn't hurt to also apply the configuration to the master Machine Config. If you are using oc debug master/<node> for example that pulls an image for the Red Hat Container registry
+
+6) Repeat a similar command on the master Machine Config:
+
+cat > 51-master-rh-registry-trust.yaml <<EOF
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  labels:
+    machineconfiguration.openshift.io/role: master
+  name: 51-master-rh-registry-trust
+spec:
+  config:
+    ignition:
+      config: {}
+      security:
+        tls: {}
+      timeouts: {}
+      version: 2.2.0
+    networkd: {}
+    passwd: {}
+    storage:
+      files:
+      - contents:
+          source: data:text/plain;charset=utf-8;base64,${ARC_REG}
+          verification: {}
+        filesystem: root
+        mode: 420
+        path: /etc/containers/registries.d/registry.access.redhat.com.yaml
+      - contents:
+          source: data:text/plain;charset=utf-8;base64,${RIO_REG}
+          verification: {}
+        filesystem: root
+        mode: 420
+        path: /etc/containers/registries.d/registry.redhat.io.yaml
+      - contents:
+          source: data:text/plain;charset=utf-8;base64,${POLICY_CONFIG}
+          verification: {}
+        filesystem: root
+        mode: 420
+        path: /etc/containers/policy.json
+  osImageURL: ""
+EOF
+
+7) Apply the machine Machine Config changes to the cluster:
+
+oc apply -f 51-master-rh-registry-trust.yaml
+
+8) The machine-config-controller will notice the new MachineConfig and generate a new "rendered" version that looks like rendered-worker-(hash). Use oc describe machineconfigpool/worker to monitor the status of the rollout of the new rendered config to each node.
+
+Example
+---
+$ oc describe machineconfigpool/worker
+Name:         worker
+Namespace:    
+Labels:       machineconfiguration.openshift.io/mco-built-in=
+Annotations:  <none>
+API Version:  machineconfiguration.openshift.io/v1
+Kind:         MachineConfigPool
+Metadata:
+  Creation Timestamp:  2019-12-19T02:02:12Z
+  Generation:          3
+  Resource Version:    16229
+  Self Link:           /apis/machineconfiguration.openshift.io/v1/machineconfigpools/worker
+  UID:                 92697796-2203-11ea-b48c-fa163e3940e5
+Spec:
+  Configuration:
+    Name:  rendered-worker-f6819366eb455a401c42f8d96ab25c02
+    Source:
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         MachineConfig
+      Name:         00-worker
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         MachineConfig
+      Name:         01-worker-container-runtime
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         MachineConfig
+      Name:         01-worker-kubelet
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         MachineConfig
+      Name:         51-worker-rh-registry-trust
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         MachineConfig
+      Name:         99-worker-92697796-2203-11ea-b48c-fa163e3940e5-registries
+      API Version:  machineconfiguration.openshift.io/v1
+      Kind:         MachineConfig
+      Name:         99-worker-ssh
+  Machine Config Selector:
+    Match Labels:
+      machineconfiguration.openshift.io/role:  worker
+  Node Selector:
+    Match Labels:
+      node-role.kubernetes.io/worker:  
+  Paused:                              false
+Status:
+  Conditions:
+    Last Transition Time:  2019-12-19T02:03:27Z
+    Message:               
+    Reason:                
+    Status:                False
+    Type:                  RenderDegraded
+    Last Transition Time:  2019-12-19T02:03:43Z
+    Message:               
+    Reason:                
+    Status:                False
+    Type:                  NodeDegraded
+    Last Transition Time:  2019-12-19T02:03:43Z
+    Message:               
+    Reason:                
+    Status:                False
+    Type:                  Degraded
+    Last Transition Time:  2019-12-19T02:28:23Z
+    Message:               
+    Reason:                
+    Status:                False
+    Type:                  Updated
+    Last Transition Time:  2019-12-19T02:28:23Z
+    Message:               All nodes are updating to rendered-worker-f6819366eb455a401c42f8d96ab25c02
+    Reason:                
+    Status:                True
+    Type:                  Updating
+  Configuration:
+    Name:  rendered-worker-d9b3f4ffcfd65c30dcf591a0e8cf9b2e
+    Source:
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   00-worker
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   01-worker-container-runtime
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   01-worker-kubelet
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   99-worker-92697796-2203-11ea-b48c-fa163e3940e5-registries
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   99-worker-ssh
+  Degraded Machine Count:     0
+  Machine Count:              1
+  Observed Generation:        3
+  Ready Machine Count:        0
+  Unavailable Machine Count:  1
+  Updated Machine Count:      0
+Events:                       <none>
+
+---
+
+Which will be later updated:
+
+$ oc describe machineconfigpool/worker
+...
+    Last Transition Time:  2019-12-19T04:53:09Z
+    Message:               
+    Reason:                
+    Status:                False
+    Type:                  Updated
+    Last Transition Time:  2019-12-19T04:53:09Z
+    Message:               All nodes are updating to rendered-worker-44d515bcc439808af36f591f3e3ef117
+    Reason:                
+    Status:                True
+    Type:                  Updating
+  Configuration:
+    Name:  rendered-worker-f6819366eb455a401c42f8d96ab25c02
+    Source:
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   00-worker
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   01-worker-container-runtime
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   01-worker-kubelet
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   51-worker-rh-registry-trust
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   99-worker-92697796-2203-11ea-b48c-fa163e3940e5-registries
+      API Version:            machineconfiguration.openshift.io/v1
+      Kind:                   MachineConfig
+      Name:                   99-worker-ssh
+  Degraded Machine Count:     0
+  Machine Count:              1
+  Observed Generation:        4
+...
+
+Notice the Observed Generation count has been incremented and the Configuration Source now includes 51-worker-rh-registry-trust
+
+9) To verify the files have changed on disk you can use:
+
+$ oc debug node/<node> -- chroot /host cat /etc/containers/policy.json
+Starting pod/<node>-debug ...
+To use host binaries, run `chroot /host`
+{
+  "default": [
+    {
+      "type": "insecureAcceptAnything"
+    }
+  ],
+  "transports": {
+    "docker": {
+      "registry.access.redhat.com": [
+        {
+          "type": "signedBy",
+          "keyType": "GPGKeys",
+          "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+        }
+      ],
+      "registry.redhat.io": [
+        {
+          "type": "signedBy",
+          "keyType": "GPGKeys",
+          "keyPath": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+        }
+      ]
+    },
+    "docker-daemon": {
+      "": [
+        {
+          "type": "insecureAcceptAnything"
+        }
+      ]
+    }
+  }
+}
+
+$ oc debug node/<node> -- chroot /host cat /etc/containers/registries.d/registry.redhat.io.yaml
+Starting pod/<node>-debug ...
+To use host binaries, run `chroot /host`
+docker:
+     registry.redhat.io:
+         sigstore: https://registry.redhat.io/containers/sigstore
+
+$ oc debug node/<node> -- chroot /host cat /etc/containers/registries.d/registry.access.redhat.com.yaml
+Starting pod/<node>-debug ...
+To use host binaries, run `chroot /host`
+docker:
+     registry.access.redhat.com:
+         sigstore: https://access.redhat.com/webassets/docker/content/sigstore
