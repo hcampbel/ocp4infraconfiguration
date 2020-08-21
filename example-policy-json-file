@@ -1,3 +1,5 @@
+Allow only images from the registry.lab.example.com server. All other images are rejected:
+
 {
   "default": [
     {
