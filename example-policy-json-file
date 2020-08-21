@@ -1,0 +1,25 @@
+{
+  "default": [
+    {
+      "type": "reject"
+    }
+  ],
+  "transports": {
+    "docker-daemon": {
+      "": [
+        {
+          "type": "insecureAcceptAnything"
+        }
+      ]
+    },
+    "docker": {
+      "registry.lab.example.com": [
+        {
+          "type": "signedBy",
+          "keyType": "GPGKeys",
+          "keyPath": "/home/signer/pub/image-signer-pub.gpg"
+        }
+      ]
+    }
+  }
+}
