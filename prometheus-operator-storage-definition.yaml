@@ -1,0 +1,8 @@
+volumeClaimTemplate:
+  metadata:
+    name: aquasec-prometheus-vol
+  spec:
+    storageClassName: "ocs-storagecluster-ceph-rdb"
+    resources:
+      requests:
+        storage: 100Gi
