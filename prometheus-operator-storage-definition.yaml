@@ -1,8 +1,12 @@
-volumeClaimTemplate:
-  metadata:
-    name: aquasec-prometheus-vol
-  spec:
-    storageClassName: "ocs-storagecluster-ceph-rdb"
-    resources:
-      requests:
-        storage: 100Gi
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: persisted-example
+spec:
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: "ocs-storagecluster-ceph-rdb"
+        resources:
+          requests:
+            storage: 100Gi
