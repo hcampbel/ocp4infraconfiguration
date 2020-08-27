@@ -1,7 +1,8 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: prometheus-aqua-prom-db 
+  name: prometheus-aqua-prom-db
+  namespace: aquasec-monitoring
 spec:
   storageClassName: ocs-storagecluster-ceph-rdb
   capacity:
