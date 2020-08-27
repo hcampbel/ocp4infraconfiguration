@@ -5,8 +5,12 @@ metadata:
 spec:
   storage:
     volumeClaimTemplate:
+      metadata:
+        name: aquaprom-vol
       spec:
         storageClassName: "ocs-storagecluster-ceph-rdb"
         resources:
           requests:
             storage: 100Gi
+        accessModes:
+          - ReadWriteMany
