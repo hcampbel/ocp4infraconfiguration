@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: node
+    static_configs:
+    - targets: ['ip-10-252-25-101.ec2.internal:9100']
