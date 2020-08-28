@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prometheus-node-config
+  name: prometheus-node-configmap
   namespace: aquasec-monitoring
 data:
   prometheus-node-config.yaml: |
