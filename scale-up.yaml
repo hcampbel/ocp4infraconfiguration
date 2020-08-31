@@ -6,7 +6,7 @@ metadata:
   labels:
     app: scale-up
 spec:
-  replicas: 20 
+  replicas: 9 
   selector:
     matchLabels:
       app: scale-up
