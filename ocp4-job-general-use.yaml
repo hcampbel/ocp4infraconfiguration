@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: work
-        image: busybox
+        image: spnexus.lab.dtcc.com:7990/busybox:latest
         command: ["sleep",  "300"]
         resources:
           requests:
