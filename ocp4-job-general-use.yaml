@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: work-queue-
+spec:
+  template:
+    spec:
+      containers:
+      - name: work
+        image: busybox
+        command: ["sleep",  "300"]
+        resources:
+          requests:
+            memory: 500Mi
+            cpu: 300m
+      restartPolicy: Never
+      nodeSelector:
+        node-role.kubernetes.io/general-use: ""
+  parallelism: 50
+  completions: 50
