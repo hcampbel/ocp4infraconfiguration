@@ -15,8 +15,8 @@ spec:
     metadata:
       labels:
         machine.openshift.io/cluster-api-cluster: <infrastructureID> 
-        machine.openshift.io/cluster-api-machine-role: infra 
-        machine.openshift.io/cluster-api-machine-type: infra
+        machine.openshift.io/cluster-api-machine-role: worker 
+        machine.openshift.io/cluster-api-machine-type: worker
         machine.openshift.io/cluster-api-machineset: <infrastructureID>-infra-1a 
     spec:
       metadata:
@@ -81,8 +81,8 @@ spec:
     metadata:
       labels:
         machine.openshift.io/cluster-api-cluster: <infrastructureID> 
-        machine.openshift.io/cluster-api-machine-role: infra 
-        machine.openshift.io/cluster-api-machine-type: infra
+        machine.openshift.io/cluster-api-machine-role: worker 
+        machine.openshift.io/cluster-api-machine-type: worker
         machine.openshift.io/cluster-api-machineset: <infrastructureID>-infra-1c 
     spec:
       metadata:
@@ -147,8 +147,8 @@ spec:
     metadata:
       labels:
         machine.openshift.io/cluster-api-cluster: <infrastructureID> 
-        machine.openshift.io/cluster-api-machine-role: infra 
-        machine.openshift.io/cluster-api-machine-type: infra
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
         machine.openshift.io/cluster-api-machineset: <infrastructureID>-infra-1e 
     spec:
       metadata:
