@@ -21,7 +21,14 @@ spec:
     spec:
       metadata:
         labels:
-          node-role.kubernetes.io/infra: "" 
+          node-role.kubernetes.io/infra: ""
+      taints:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved 
       providerSpec:
         value:
           ami:
@@ -80,7 +87,14 @@ spec:
     spec:
       metadata:
         labels:
-          node-role.kubernetes.io/infra: "" 
+          node-role.kubernetes.io/infra: ""
+      taints:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved 
       providerSpec:
         value:
           ami:
@@ -139,7 +153,14 @@ spec:
     spec:
       metadata:
         labels:
-          node-role.kubernetes.io/infra: "" 
+          node-role.kubernetes.io/infra: ""
+      taints:
+      - effect: NoSchedule
+        key: infra
+        value: reserved
+      - effect: NoExecute
+        key: infra
+        value: reserved 
       providerSpec:
         value:
           ami:
