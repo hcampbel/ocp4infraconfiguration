@@ -16,7 +16,7 @@ spec:
       serviceAccountName: jaeger-operator
       containers:
         - name: jaeger-operator
-          image: jaegertracing/jaeger-operator:1.13.1
+          image: registry.redhat.io/distributed-tracing/jaeger-rhel7-operator@sha256:3eeed89119c20386161bc464136ccdeb98e99b2c40883f70d6cd2e6c742c0a50
           ports:
           - containerPort: 8383
             name: metrics
