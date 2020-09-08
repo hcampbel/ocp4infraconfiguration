@@ -1,5 +1,14 @@
 # Red Hat Service Mesh Installation Instructions
 
+### Component Versions
+
+|**Component**|**Version**|
+|-------------|-----------|
+| Istio       |   1.4.8   |
+| Jaegar      |   1.17.4  |
+| Kiali       |   1.12.7  |
+| 3Scale      |   1.0.0   |
+
 ### Pre-requisites
 
 1. Install the `ElasticSearch Operator` - already installed as a part of Cluster Logging Service
@@ -61,12 +70,13 @@
 
 #### Creating the Red Hat OpenShift Service Mesh member roll
 
-1. If you don’t already have projects for your mesh, or you are starting from scratch, create a project. It must be different from istio-system.
+1. If you don’t already have projects for your mesh, or you are starting from scratch, create a project. It must be different from `istio-system`.
 1. Log in to the OpenShift Container Platform web console.
-Navigate to Operators → Installed Operators.
-1. Click the Project menu and choose the project where your ServiceMeshControlPlane is deployed from the list, for example istio-system.
+1. Navigate to **Operators → Installed Operators**.
+1. Click the **Project** menu and choose the project where your `ServiceMeshControlPlane` is deployed from the list, for example `istio-system`.
 1. Click the Red Hat OpenShift Service Mesh Operator.
-1. Click the All Instances tab.
-1. Click Create New, and then select Create Istio Service Mesh Member Roll.
-1. On the Create Service Mesh Member Roll page, modify the YAML to add your projects as members. You can add any number of projects, but a project can only belong to one ServiceMeshMemberRoll resource.
-1. Click Create to save the Service Mesh Member Roll.
+1. Click the **All Instances** tab.
+1. Click **Create New**, and then select **Create Istio Service Mesh Member Roll**.
+1. On the **Create Service Mesh Member Roll** page, modify the YAML to add your projects as members. You can add any number of projects, but a project can only belong to **one** `ServiceMeshMemberRoll` resource.
+1. Click **Create** to save the Service Mesh Member Roll.
+
