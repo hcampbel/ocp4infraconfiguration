@@ -4,11 +4,11 @@
 
 ```bash
 oc new-project observability # create the project for the jaeger operator
-oc create -n observability -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.13.1/deploy/crds/jaegertracing_v1_jaeger_crd.yaml
-oc create -n observability -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.13.1/deploy/service_account.yaml
-oc create -n observability -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.13.1/deploy/role.yaml
-oc create -n observability -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.13.1/deploy/role_binding.yaml
-oc create -n observability -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.13.1/deploy/operator.yaml
+oc create -n observability -f https://raw.githubusercontent.com/hcampbel/ocp4infraconfiguration/master/maistra-deployment/jaegar-operator/jaegartracing_v1_jaegar_crd.yaml
+oc create -n observability -f https://raw.githubusercontent.com/hcampbel/ocp4infraconfiguration/master/maistra-deployment/jaegar-operator/service_account.yaml
+oc create -n observability -f https://raw.githubusercontent.com/hcampbel/ocp4infraconfiguration/master/maistra-deployment/jaegar-operator/role.yaml
+oc create -n observability -f https://raw.githubusercontent.com/hcampbel/ocp4infraconfiguration/master/maistra-deployment/jaegar-operator/role_binding.yaml
+oc create -n observability -f https://raw.githubusercontent.com/hcampbel/ocp4infraconfiguration/master/maistra-deployment/jaegar-operator/operator.yaml
 ```
 
 ## Installing the Kiali Operator
