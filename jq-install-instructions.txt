@@ -1,0 +1,7 @@
+-----
+Directions for installing jq
+
+1. mv usr jq && cp -R jq /usr/local
+2. Open .bash_profile and add JQ_HOME=/usr/local/jq
+3. Add to path - export PATH=$PATH:$JQ_HOME/bin
+4. Source .bash_profile
