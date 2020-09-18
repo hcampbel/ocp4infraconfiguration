@@ -1,0 +1,30 @@
+When using mutual Transport Layer Security (mTLS), client and server can verify each other’s identity and encrypt traffic using distinct certificates for both parties. This is different from 'simple' TLS, where usually only the server provides a certificate.
+
+By default, Service Mesh is configured in permissive mode: the sidecars in Service Mesh accept both plain-text traffic and connections that are encrypted using mTLS. For outgoing traffic, the sidecars default to plain-text, unencrypted connections. By using Istio configuration objects, the behaviour can be fine-tuned to your needs. One of the possible configurations is strict mTLS mode. This means that sidecars only accept incoming traffic if it is encrypted, and they will default to using encrypted connections to talk to other services in the mesh.
+
+
+To enforce Service Mesh mTLS across:
+
+apiVersion: "authentication.maistra.io/v1"
+kind: "ServiceMeshPolicy"
+metadata:
+  name: "default"
+  namespace: <CONTROL_PLANE_NS>
+spec:
+  peers:
+  - mtls: {}
+  
+This will instruct all sidecars in the mesh to only accept mTLS connections. Note that this resource has to be named 'default' and it has to be created in your control plane’s project.
+
+Now we just need to configure Envoy to use mTLS when sending requests to other services in the mesh. This can be achieved by creating a DestinationRule resource:
+
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "DestinationRule"
+metadata:
+  name: "default"
+  namespace: <CONTROL_PLANE_NS>
+spec:
+  host: "*.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
