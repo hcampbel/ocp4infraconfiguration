@@ -74,7 +74,7 @@ spec:
       serviceAccountName: bookinfo-details
       containers:
       - name: details
-        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-details:v1
+        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-details:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
