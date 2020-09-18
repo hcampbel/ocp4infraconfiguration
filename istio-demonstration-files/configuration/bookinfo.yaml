@@ -74,7 +74,7 @@ spec:
       serviceAccountName: bookinfo-details
       containers:
       - name: details
-        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-details-v1:latest
+        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-details:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -127,7 +127,7 @@ spec:
       serviceAccountName: bookinfo-ratings
       containers:
       - name: ratings
-        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-ratings-v1:latest
+        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-ratings:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -180,7 +180,7 @@ spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-reviews-v1:latest
+        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-reviews:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -291,7 +291,7 @@ spec:
       serviceAccountName: bookinfo-productpage
       containers:
       - name: productpage
-        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-productpage-v1:latest
+        image: spnexus01.lab.dtcc.com:7990/examples-bookinfo-productpage:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
