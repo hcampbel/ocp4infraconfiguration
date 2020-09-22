@@ -1,10 +1,15 @@
-Create openshift-stroage namespace
+# Add infra labels to storage nodes
+oc label node <node-name> node-role.kubernetes.io/infra=
 
-1. Click Administration → Namespaces in the left pane of the OpenShift Web Console.
-2. Click Create Namespace.
-3.In the Create Namespace dialog box, enter openshift-storage for Name and openshift.io/cluster-monitoring=true for Labels. This label is required to get the dashboards.
-4. Select No restrictions option for Default Network Policy.
-5. Click Create.
+# Remove worker label from storage nodes
+oc label node <node-name> node-role.kubernetes.io/worker-
+
+# Add taint to node
+oc adm taint nodes -l cluster.ocs.openshift.io/openshift-storage node.ocs.openshift.io/storage=true:NoSchedule
+
+
+# Create openshift-storage namespace and label for cluster monitoring
+oc create namespace openshift-storage && oc label namespace openshift-storage "openshift.io/cluster-monitoring=true"
 
 Deploy OCS Operator
 
