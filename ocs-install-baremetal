@@ -1,0 +1,126 @@
+Create openshift-stroage namespace
+
+1. Click Administration → Namespaces in the left pane of the OpenShift Web Console.
+2. Click Create Namespace.
+3.In the Create Namespace dialog box, enter openshift-storage for Name and openshift.io/cluster-monitoring=true for Labels. This label is required to get the dashboards.
+4. Select No restrictions option for Default Network Policy.
+5. Click Create.
+
+Deploy OCS Operator
+
+1. Click Operators → OperatorHub in the left pane of the OpenShift Web Console.
+2. Search for OpenShift Container Storage Operator from the list of operators and click on it.
+3. On the OpenShift Container Storage Operator page, click Install.
+4. On the Create Operator Subscription page, the Installation Mode, Update Channel, and Approval Strategy options can be set:
+   a) Select A specific namespace on the cluster for the Installation Mode option.
+   b) Select stable-4.3 as the update channel based on your requirement.
+   c) Select an Approval Strategy:
+      i)  Automatic specifies that you want OpenShift Container Platform to upgrade OpenShift Container Storage automatically.
+      ii) Manual specifies that you want to have control to upgrade OpenShift Container Storage manually.
+5. Click Subscribe.
+
+Creating an OpenShift Container Storage service
+
+1. Click Operators → Installed Operators from the left pane of the OpenShift Web Console to view the installed operators.
+2. On the Installed Operator page, select openshift-storage from the Project drop down list to switch to the openshift-storage project.
+3. Click OpenShift Container Storage Operator. OpenShift Container Storage operator creates a OCSInitialization resource automatically.
+4. On the OpenShift Container Storage Operator page, scroll right and click the Storage Cluster tab.
+5. On the OCS Cluster Services page, click Create OCS Cluster Service.
+6. On the Create New OCS Service page, perform the following:
+   a) Select at least three worker nodes from the available list of nodes for the use of OpenShift Container Storage service. Ensure that the nodes are in different Location.
+   b) Storage Class is set by default to gp2 for AWS and thin for VMware.
+   c) Select OCS Service Capacity from drop down list.
+7. Click Create
+
+Installing Local Storage Operator
+
+1. Create a namespace called local-storage as follows:
+   a) Click Administration → Namespaces in the left pane of the OpenShift Web Console.
+   b) Click Create Namespace.
+   c) In the Create Namespace dialog box, enter local-storage for Name.
+   d) Select No restrictions option for Default Network Policy.
+   e) Click Create.
+2. Click Operators → OperatorHub in the left pane of the OpenShift Web Console.
+3. Search for Local Storage Operator from the list of operators and click on it.
+4. Click Install
+5. Select A specific namespace on the cluster for the Installation Mode option.
+   a) Select local-storage namespace from the drop down menu.
+6. Select a desired value for the Update Channel option.
+7. Select the desired Approval Strategy.
+8. Click Subscribe.
+9. Verify that the Local Storage Operator show the Status as Succeeded.
+
+Finding available storage
+
+1. List and verify the name of the worker nodes with the OpenShift Container Storage label: oc get nodes -l cluster.ocs.openshift.io/openshift-storage=
+2. Log in to each worker node that is used for OpenShift Container Storage resources and find the unique by-id device name for each available raw block device
+   a) oc debug node/<Nodename>
+   b) chroot /host
+   c) lsblk
+3. Find the unique by-id device name depending on the hardware serial number for each device.
+   a) ls -l /dev/disk/by-id/
+
+Creating OpenShift Container Storage cluster on bare metal
+
+1. Create LocalVolume CR for block PVs.
+
+---
+apiVersion: local.storage.openshift.io/v1
+kind: LocalVolume
+metadata:
+  name: local-block
+  namespace: local-storage
+  labels:
+    app: ocs-storagecluster
+spec:
+  nodeSelector:
+    nodeSelectorTerms:
+    - matchExpressions:
+        - key: cluster.ocs.openshift.io/openshift-storage
+          operator: In
+          values:
+          - ""
+  storageClassDevices:
+    - storageClassName: localblock
+      volumeMode: Block
+      devicePaths:
+        - /dev/disk/by-id/nvme-INTEL_SSDPEKKA128G7_BTPY81260978128A   # <-- modify this line
+        - /dev/disk/by-id/nvme-INTEL_SSDPEKKA128G7_BTPY80440W5U128A   # <-- modify this line
+        - /dev/disk/by-id/nvme-INTEL_SSDPEKKA128G7_BTPYB85AABDE128A   # <-- modify this line
+        - /dev/disk/by-id/nvme-INTEL_SSDPEKKA128G7_BTPY0A60CB81128A   # <-- modify this line
+        - /dev/disk/by-id/nvme-INTEL_SSDPEKKA128G7_BTPY0093D45E128A   # <-- modify this line
+        - /dev/disk/by-id/nvme-INTEL_SSDPEKKA128G7_BTPYE46F6060128A   # <-- modify this line
+---
+
+2. Create the LocalVolume CR for block PVs: oc create -f local-storage-block.yaml
+3. Check if the pods are created: oc -n local-storage get pods
+4. Check if PVs are created: oc get pv
+5. Check for the new localblock StorageClass: oc get sc | grep localblock
+6. Create StorageCluster CR cluster-service-metal.yaml using monDataDirHostPath and localblock storage classes.
+---
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: ocs-storagecluster
+  namespace: openshift-storage
+spec:
+  manageNodes: false
+  monDataDirHostPath: /var/lib/rook
+  storageDeviceSets:
+  - count: 1
+    dataPVCTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Ti
+        storageClassName: localblock
+        volumeMode: Block
+    name: ocs-deviceset
+    placement: {}
+    portable: false
+    replica: 3
+    resources: {}
+---
+7. Create the StorageCluster CR: oc create -f cluster-service-metal.yaml
