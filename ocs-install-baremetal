@@ -24,19 +24,6 @@ Deploy OCS Operator
       ii) Manual specifies that you want to have control to upgrade OpenShift Container Storage manually.
 5. Click Subscribe.
 
-Creating an OpenShift Container Storage service
-
-1. Click Operators → Installed Operators from the left pane of the OpenShift Web Console to view the installed operators.
-2. On the Installed Operator page, select openshift-storage from the Project drop down list to switch to the openshift-storage project.
-3. Click OpenShift Container Storage Operator. OpenShift Container Storage operator creates a OCSInitialization resource automatically.
-4. On the OpenShift Container Storage Operator page, scroll right and click the Storage Cluster tab.
-5. On the OCS Cluster Services page, click Create OCS Cluster Service.
-6. On the Create New OCS Service page, perform the following:
-   a) Select at least three worker nodes from the available list of nodes for the use of OpenShift Container Storage service. Ensure that the nodes are in different Location.
-   b) Storage Class is set by default to gp2 for AWS and thin for VMware.
-   c) Select OCS Service Capacity from drop down list.
-7. Click Create
-
 Installing Local Storage Operator
 
 1. Create a namespace called local-storage as follows:
