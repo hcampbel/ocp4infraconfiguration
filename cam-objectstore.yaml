@@ -1,0 +1,8 @@
+apiVersion: ceph.rook.io/v1
+kind: CephObjectStoreUser
+metadata:
+  name: camuser
+  namespace: openshift-storage
+spec:
+  store: ocs-storagecluster-cephobjectstore
+  displayName: "CAM S3 Bucket user"
