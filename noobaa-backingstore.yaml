@@ -13,5 +13,5 @@ spec:
     resources:
       requests:
         storage: 50Gi 
-    storageClass: thin 
+    storageClass: ocs-storagecluster-ceph-rbd 
   type: pv-pool
