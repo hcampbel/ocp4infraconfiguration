@@ -2,6 +2,9 @@ apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
   name: campool-obc
+  namespace: openshift-storage
 spec:
   generateBucketName: campoolbucket
   storageClassName: openshift-storage.noobaa.io
+  additionalConfig:
+    bucketclass: campool
