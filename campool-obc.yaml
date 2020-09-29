@@ -4,4 +4,4 @@ metadata:
   name: campool-obc
 spec:
   generateBucketName: campoolbucket
-  storageClassName: noobaa
+  storageClassName: openshift-storage.noobaa.io
