@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/part-of: istio
     chart: gateways
     heritage: Tiller
-    istio: inressgateway
+    istio: ingressgateway
     maistra-version: 1.0.7
     maistra.io/owner: istio-system
     release: istio
