@@ -1,0 +1,28 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: istio-ingressgateway
+    app.kubernetes.io/component: gateways
+    app.kubernetes.io/instance: istio-system
+    app.kubernetes.io/managed-by: maistra-istio-operator
+    app.kubernetes.io/name: gateways
+    app.kubernetes.io/part-of: istio
+    chart: gateways
+    heritage: Tiller
+    istio: inressgateway
+    maistra-version: 1.0.7
+    maistra.io/owner: istio-system
+    release: istio
+  name: istio-ingressgateway
+spec:
+  port:
+    targetPort: 9080
+  subdomain: ""
+  to:
+    kind: Service
+    name: istio-ingressgateway
+    weight: 100
+  wildcardPolicy: None
