@@ -6,5 +6,5 @@ metadata:
 spec:
   members:
     # a list of projects joined into the service mesh
-    - your-project-name
-    - another-project-name
+    - bookinfo
+    #- another-project-name
