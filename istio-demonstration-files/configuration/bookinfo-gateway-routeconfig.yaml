@@ -12,7 +12,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - productpage-bookinfo.apps.ocp4i.lab.dtcc.com
+    - productpage
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -21,7 +21,7 @@ metadata:
   namespace: bookinfo
 spec:
   hosts:
-  - productpage-bookinfo.apps.ocp4i.lab.dtcc.com
+  - productpage
   gateways:
   - bookinfo-gateway
   http:
@@ -68,7 +68,7 @@ spec:
 #   subdomain: ""
 #   to:
 #     kind: Service
-#     name: bookinfo-gateway
+#     name: productpage
 #     weight: 100
 #   wildcardPolicy: None
 
