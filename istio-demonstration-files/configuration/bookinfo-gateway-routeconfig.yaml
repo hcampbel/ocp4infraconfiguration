@@ -1,3 +1,33 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: productpage
+    app.kubernetes.io/component: gateways
+    app.kubernetes.io/instance: istio-system
+    app.kubernetes.io/managed-by: maistra-istio-operator
+    app.kubernetes.io/name: gateways
+    app.kubernetes.io/part-of: istio
+    app.kubernetes.io/version: 1.1.9-1
+    chart: gateways
+    heritage: Tiller
+    istio: bookinfo-gateway
+    maistra-version: 1.1.9
+    maistra.io/owner: istio-system
+    release: istio
+  name: bookinfo-gateway-route
+spec:
+  port:
+    targetPort: http
+  subdomain: ""
+  to:
+    kind: Service
+    name: productpage
+    weight: 100
+  wildcardPolicy: None
+---
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
@@ -12,7 +42,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - productpage
+    - productpage-bookinfo.apps.ocp4i.lab.dtcc.com
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -21,7 +51,7 @@ metadata:
   namespace: bookinfo
 spec:
   hosts:
-  - productpage
+  - productpage-bookinfo.apps.ocp4i.lab.dtcc.com
   gateways:
   - bookinfo-gateway
   http:
@@ -41,35 +71,6 @@ spec:
         host: productpage
         port:
           number: 9080
-# ---
-# apiVersion: route.openshift.io/v1
-# kind: Route
-# metadata:
-#   annotations:
-#     openshift.io/host.generated: "true"
-#   labels:
-#     app: bookinfo
-#     app.kubernetes.io/component: gateways
-#     app.kubernetes.io/instance: istio-system
-#     app.kubernetes.io/managed-by: maistra-istio-operator
-#     app.kubernetes.io/name: gateways
-#     app.kubernetes.io/part-of: istio
-#     app.kubernetes.io/version: 1.1.9-1
-#     chart: gateways
-#     heritage: Tiller
-#     istio: bookinfo-gateway
-#     maistra-version: 1.1.9
-#     maistra.io/owner: istio-system
-#     release: istio
-#   name: bookinfo-gateway-route
-# spec:
-#   port:
-#     targetPort: 8080
-#   subdomain: ""
-#   to:
-#     kind: Service
-#     name: productpage
-#     weight: 100
-#   wildcardPolicy: None
+
 
 
