@@ -31,7 +31,7 @@ objects:
   kind: Service
   metadata:
     annotations:
-      maistra.io/mesh-generation: 1.1.9-1.el8-1
+      maistra.io/mesh-generation: 1.1.9-1
     labels:
       app: istio-${INGRESS_GATEWAY_NAME}
       app.kubernetes.io/component: gateways
@@ -39,7 +39,7 @@ objects:
       app.kubernetes.io/managed-by: maistra-istio-operator
       app.kubernetes.io/name: gateways
       app.kubernetes.io/part-of: istio
-      app.kubernetes.io/version: 1.1.9-1.el8-1
+      app.kubernetes.io/version: 1.1.9-1
       chart: gateways
       heritage: Tiller
       istio: ${INGRESS_GATEWAY_NAME}
@@ -78,7 +78,7 @@ objects:
   metadata:
     annotations:
       deployment.kubernetes.io/revision: "1"
-      maistra.io/mesh-generation: 1.1.9-1.el8-1
+      maistra.io/mesh-generation: 1.1.9-1
     generation: 1
     labels:
       app: istio-${INGRESS_GATEWAY_NAME}
@@ -87,7 +87,7 @@ objects:
       app.kubernetes.io/managed-by: maistra-istio-operator
       app.kubernetes.io/name: gateways
       app.kubernetes.io/part-of: istio
-      app.kubernetes.io/version: 1.1.9-1.el8-1
+      app.kubernetes.io/version: 1.1.9-1
       chart: gateways
       heritage: Tiller
       istio: ${INGRESS_GATEWAY_NAME}
@@ -292,7 +292,7 @@ objects:
       app.kubernetes.io/managed-by: maistra-istio-operator
       app.kubernetes.io/name: gateways
       app.kubernetes.io/part-of: istio
-      app.kubernetes.io/version: 1.1.9-1.el8-1
+      app.kubernetes.io/version: 1.1.9-1
       chart: gateways
       heritage: Tiller
       istio: ${INGRESS_GATEWAY_NAME}
