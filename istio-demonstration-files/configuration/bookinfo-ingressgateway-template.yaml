@@ -25,7 +25,7 @@ objects:
   metadata:
     name: ${INGRESS_GATEWAY_NAME}-service-account
     labels:
-      app: istio-${INGRESS_GATEWAY_NAME}
+      app: productpage
       istio: ${INGRESS_GATEWAY_NAME}
 - apiVersion: v1
   kind: Service
@@ -33,7 +33,7 @@ objects:
     annotations:
       maistra.io/mesh-generation: 1.1.9-1
     labels:
-      app: istio-${INGRESS_GATEWAY_NAME}
+      app: productpage
       app.kubernetes.io/component: gateways
       app.kubernetes.io/instance: istio-system
       app.kubernetes.io/managed-by: maistra-istio-operator
@@ -66,7 +66,7 @@ objects:
       protocol: TCP
       targetPort: 15443
     selector:
-      app: istio-${INGRESS_GATEWAY_NAME}
+      app: productpage
       istio: ${INGRESS_GATEWAY_NAME}
       release: istio
     sessionAffinity: None
@@ -81,7 +81,7 @@ objects:
       maistra.io/mesh-generation: 1.1.9-1
     generation: 1
     labels:
-      app: istio-${INGRESS_GATEWAY_NAME}
+      productpage istio-${INGRESS_GATEWAY_NAME}
       app.kubernetes.io/component: gateways
       app.kubernetes.io/instance: istio-system
       app.kubernetes.io/managed-by: maistra-istio-operator
@@ -101,7 +101,7 @@ objects:
     revisionHistoryLimit: 2147483647
     selector:
       matchLabels:
-        app: istio-${INGRESS_GATEWAY_NAME}
+        app: productpage
         istio: ${INGRESS_GATEWAY_NAME}
     strategy:
       rollingUpdate:
@@ -114,7 +114,7 @@ objects:
           sidecar.istio.io/inject: "false"
         creationTimestamp: null
         labels:
-          app: istio-${INGRESS_GATEWAY_NAME}
+          app: productpage
           chart: gateways
           heritage: Tiller
           istio: ${INGRESS_GATEWAY_NAME}
@@ -286,7 +286,7 @@ objects:
     annotations:
       openshift.io/host.generated: "true"
     labels:
-      app: istio-${INGRESS_GATEWAY_NAME}
+      app: productpage
       app.kubernetes.io/component: gateways
       app.kubernetes.io/instance: istio-system
       app.kubernetes.io/managed-by: maistra-istio-operator
