@@ -23,7 +23,7 @@ spec:
         value: reserved
       storage:
         storageClassName: "ocs-storagecluster-ceph-rbd" 
-        size: 200G
+        size: 300Gi
       redundancyPolicy: "SingleRedundancy"
   visualization:
     type: "kibana"  
